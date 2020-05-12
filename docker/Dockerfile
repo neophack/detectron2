@@ -7,12 +7,7 @@ RUN apt-get update && apt-get install -y \
   rm -rf /var/lib/apt/lists/*
 RUN ln -sv /usr/bin/python3 /usr/bin/python
 
-# create a non-root user
-ARG USER_ID=1000
-RUN useradd -m --no-log-init --system  --uid ${USER_ID} appuser -g sudo
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-USER appuser
-WORKDIR /home/appuser
+WORKDIR /ws
 
 RUN wget https://bootstrap.pypa.io/get-pip.py && \
 	python3 get-pip.py  && \
@@ -38,7 +33,7 @@ RUN pip install  -e detectron2_repo
 
 # Set a fixed model cache directory.
 ENV FVCORE_CACHE="/tmp"
-WORKDIR /home/appuser/detectron2_repo
+WORKDIR /ws/detectron2_repo
 
 # run detectron2 under user "appuser":
 #wget http://images.cocodataset.org/val2017/000000439715.jpg -O input.jpg
